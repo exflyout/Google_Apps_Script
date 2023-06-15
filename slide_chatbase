@@ -1,3 +1,12 @@
+// This will run when the document is opened, creating a custom menu.
+function onOpen() {
+  var ui = SlidesApp.getUi();
+  ui.createMenu('Custom Menu')
+      .addItem('Run chatbase_PPT', 'chatbase_PPT')
+      .addToUi();
+}
+
+
 function chatbase_PPT() {
   var presentation = SlidesApp.getActivePresentation();
   var selection = presentation.getSelection();
@@ -25,3 +34,30 @@ function chatbase_PPT() {
 }
 
 // ... chatbase function as before ...
+
+
+function chatbase(cellValue) {
+  var url = 'https://www.chatbase.co/api/v1/chat';
+  var options = {
+    method: 'post',
+    headers: {
+      "Authorization": 'Bearer 903a2d97-50a9-4a28-9033-270e02aa2c20',
+      "Content-Type": "application/json"
+    },
+    payload: JSON.stringify({
+      messages: [
+        { content: 'How can I help you?', role: 'assistant' },
+        { content: cellValue, role: 'user' }
+      ],
+      chatbotId: 'XrqmGr8PBJ32aIdta-JAP',
+      stream: false,
+      model: 'gpt-3.5-turbo',
+      temperature: 0
+    })
+  };
+  var response = UrlFetchApp.fetch(url, options);
+  var data = JSON.parse(response.getContentText());
+  Logger.log(data); // { "text": "..."}
+  
+  return data.text; // if you want to return the generated text to the cell
+}
