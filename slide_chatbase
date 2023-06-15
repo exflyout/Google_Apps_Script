@@ -1,0 +1,27 @@
+function chatbase_PPT() {
+  var presentation = SlidesApp.getActivePresentation();
+  var selection = presentation.getSelection();
+  
+  // Check if a slide is selected
+  if (selection.getCurrentPage() == null) {
+    return "Error: Please select a slide.";
+  }
+  
+  var currentSlide = selection.getCurrentPage().asSlide();
+  var shapes = currentSlide.getShapes();
+  var allText = '';
+  
+  for (var i = 0; i < shapes.length; i++) {
+    if (shapes[i].getText) {
+      allText += shapes[i].getText().asString() + ' ';
+    }
+  }
+  
+  var responseText = chatbase(allText);
+  
+  // Add a text box with the response text to the current slide
+  var textBox = currentSlide.insertTextBox(responseText);
+  textBox.select(); // Select the text box
+}
+
+// ... chatbase function as before ...
